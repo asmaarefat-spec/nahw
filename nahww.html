@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُغامَرَةُ قِطَارِ الْكَلِمَاتِ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --primary-dark: #1a4971;
+            --success: #2e7d32;
+            --danger: #d32f2f;
+            --warning: #f57c00;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 60%, #bbf7d0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: #1f2937;
+            user-select: none;
+        }
+
+        .game-wrapper {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 680px;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0, 70, 130, 0.15), 0 0 0 6px #ffffff;
+            text-align: center;
+            position: relative;
+            border: 3px solid #7dd3fc;
+        }
+
+        header {
+            margin-bottom: 20px;
+        }
+
+        .badge-title {
+            display: inline-block;
+            background: #fed7aa;
+            color: #9a3412;
+            padding: 4px 16px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #0c4a6e;
+            margin-bottom: 6px;
+        }
+
+        /* شاشة إدخال الاسم والترحيب */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+        }
+
+        .input-group {
+            width: 100%;
+            max-width: 380px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .child-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #7dd3fc;
+            border-radius: 16px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            outline: none;
+            text-align: center;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        .child-input:focus {
+            border-color: #0284c7;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+        }
+
+        .gender-options {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .gender-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            background: #f8fafc;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .gender-btn.active {
+            border-color: #0284c7;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        /* شريط الإحصائيات */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 16px;
+            padding: 10px 18px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stage-banner {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff;
+            padding: 12px 18px;
+            border-radius: 18px;
+            margin-bottom: 22px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+        }
+
+        .card-display {
+            min-height: 140px;
+            background: #fff;
+            border: 3px dashed #38bdf8;
+            border-radius: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .card-prompt {
+            font-size: 1.05rem;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .card-text {
+            font-size: 2.1rem;
+            font-weight: 900;
+            color: #0369a1;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .btn-choice {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 16px 12px;
+            border-radius: 18px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            box-shadow: 0 4px 0 #cbd5e1;
+        }
+
+        .btn-choice:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #cbd5e1;
+            background: #f1f5f9;
+        }
+
+        .btn-choice:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+
+        .btn-choice:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        .btn-choice.correct {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+            box-shadow: 0 4px 0 #22c55e !important;
+        }
+
+        .btn-choice.wrong {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+            box-shadow: 0 4px 0 #ef4444 !important;
+        }
+
+        .feedback-box {
+            min-height: 48px;
+            margin-bottom: 16px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            padding: 8px 14px;
+        }
+
+        .feedback-box.correct {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .feedback-box.wrong {
+            background: #fff1f2;
+            color: #9f1239;
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 16px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #b45309, 0 10px 20px rgba(217, 119, 6, 0.3);
+            transition: all 0.15s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #b45309, 0 12px 22px rgba(217, 119, 6, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b45309;
+        }
+
+        .certificate-screen {
+            display: none;
+            padding: 10px;
+        }
+
+        .cert-border {
+            border: 4px double #d97706;
+            border-radius: 20px;
+            padding: 24px;
+            background: #fffbeb;
+        }
+
+        .cert-title {
+            font-size: 1.8rem;
+            color: #b45309;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .cert-name {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #1e3a8a;
+            margin: 12px 0;
+            text-decoration: underline wavy #f59e0b;
+        }
+
+        .cert-body {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #4b5563;
+            margin-bottom: 20px;
+        }
+
+        .confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 28px;
+        }
+
+        .sound-toggle {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-wrapper">
+        <canvas id="confetti" class="confetti-canvas"></canvas>
+        <button id="soundBtn" class="sound-toggle" title="كتم/تشغيل الصوت">🔊</button>
+
+        <header>
+            <div class="badge-title">قَوَاعِدُ النَّحْوِ الْوَاضِحِ 🚂</div>
+            <h1>مُغامَرَةُ قِطَارِ الْكَلِمَاتِ</h1>
+        </header>
+
+        <!-- الشاشة 1: تسجيل اسم الطفل -->
+        <section id="welcomeScreen" class="welcome-screen">
+            <p style="font-size: 1.2rem; color: #475569; font-weight: 700;">
+                مَرْحَباً بِكَ فِي مَحَطَّةِ الْقِطَارِ! أَدْخِلِ اسْمَكَ لِتَبْدَأَ التَّحَدِّي:
+            </p>
+            <div class="input-group">
+                <input type="text" id="childNameInput" class="child-input" placeholder="اكْتُبِ اسْمَكَ هُنَا..." autocomplete="off">
+            </div>
+
+            <div class="gender-options">
+                <button type="button" class="gender-btn active" id="boyBtn" onclick="selectGender('boy')">👦 بَطَلٌ</button>
+                <button type="button" class="gender-btn" id="girlBtn" onclick="selectGender('girl')">👧 بَطَلَةٌ</button>
+            </div>
+
+            <button id="startGameBtn" class="btn-primary" style="margin-top: 10px;">انْطَلِقْ الآن 🚀</button>
+        </section>
+
+        <!-- الشاشة 2: شاشة اللعب النشطة -->
+        <main id="gamePlayScreen" style="display: none;">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span>🌟 النِّقَاط:</span>
+                    <span id="scoreDisplay" style="color: #d97706;">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>📋 السُّؤَال:</span>
+                    <span id="questionNumDisplay">1/12</span>
+                </div>
+            </div>
+
+            <div id="stageBanner" class="stage-banner">المَرْحَلَةُ 1: فَحْصُ الجُمَلِ</div>
+
+            <div class="card-display">
+                <div id="cardPrompt" class="card-prompt">هَلْ تُعَدُّ هَذِهِ الْجُمْلَةُ مُفِيدَةً؟</div>
+                <div id="cardText" class="card-text">يَقْرَأُ الطَّالِبُ الْكِتَابَ</div>
+            </div>
+
+            <div id="optionsContainer" class="options-grid"></div>
+
+            <div id="feedbackBox" class="feedback-box"></div>
+
+            <div style="display: flex; justify-content: center;">
+                <button id="nextBtn" class="btn-primary" style="display: none;">التَّالِي ⬅️</button>
+            </div>
+        </main>
+
+        <!-- الشاشة 3: الشهادة المخصصة باسم الطفل -->
+        <section id="certScreen" class="certificate-screen">
+            <div class="cert-border">
+                <div style="font-size: 3rem; margin-bottom: 8px;">🎖️</div>
+                <div class="cert-title" id="certRoleTitle">شَهَادَةُ نَاظِرِ الْمَحَطَّةِ الْمُتَمَيِّزِ</div>
+                <p id="certLeadText">نَشْهَدُ بِأَنَّ الْبَطَلَ النَّحْوِيَّ:</p>
+                <div class="cert-name" id="certChildName">---</div>
+                <div class="cert-body" id="certBodyText">
+                    قَدْ أَجَادَ وَأَتْقَنَ التَّمْيِيزَ بَيْنَ <strong>الْجُمْلَةِ الْمُفِيدَةِ</strong>، وَأَقْسَامِ الْكَلِمَةِ (<strong>الاسْمِ وَالْفِعْلِ وَالْحَرْفِ</strong>)، وَأَنْوَاعِ الْفِعْلِ (<strong>الْمَاضِي وَالْمُضَارِعِ وَالأَمْرِ</strong>) بِجَدَارَةٍ!
+                </div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-bottom: 20px;">
+                    الدَّرَجَةُ النِّهَائِيَّةُ: <span id="finalScore">0</span> مِنْ 12
+                </div>
+                <button id="restartBtn" class="btn-primary">اللَّعِبُ مَرَّةً أُخْرَى 🔄</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let childName = "";
+        let childGender = "boy";
+
+        function selectGender(gender) {
+            childGender = gender;
+            document.getElementById('boyBtn').classList.toggle('active', gender === 'boy');
+            document.getElementById('girlBtn').classList.toggle('active', gender === 'girl');
+        }
+
+        const questions = [
+            // المرحلة 1: الجملة المفيدة وغير المفيدة
+            {
+                stage: "المَرْحَلَةُ 1: فَحْصُ الجُمَلِ السَّلِيمَةِ",
+                prompt: "هَلْ تُعَدُّ هَذِهِ عَبَارَةً مُفِيدَةً تَامَّةَ الْمَعْنَى؟",
+                text: "يَقْرَأُ التِّلْمِيذُ قِصَّةً جَمِيلَةً",
+                options: ["جُمْلَةٌ مُفِيدَةٌ ✅", "غَيْرُ مُفِيدَةٍ ❌"],
+                correct: 0,
+                hint: "أَحْسَنْتَ! أَفَادَتْ مَعْنًى تَامّاً يَحْسُنُ السُّكُوتُ عَلَيْهِ."
+            },
+            {
+                stage: "المَرْحَلَةُ 1: فَحْصُ الجُمَلِ السَّلِيمَةِ",
+                prompt: "هَلْ تُعَدُّ هَذِهِ عَبَارَةً مُفِيدَةً تَامَّةَ الْمَعْنَى؟",
+                text: "فِي الصَّبَاحِ الْبَاكِرِ...",
+                options: ["جُمْلَةٌ مُفِيدَةٌ ✅", "غَيْرُ مُفِيدَةٍ ❌"],
+                correct: 1,
+                hint: "رَائِعٌ! كَلَامٌ نَاقِصٌ لَا يُعْطِي مَعْنًى تَامّاً حَتَّى نُكْمِلَهُ."
+            },
+            {
+                stage: "المَرْحَلَةُ 1: فَحْصُ الجُمَلِ السَّلِيمَةِ",
+                prompt: "هَلْ تُعَدُّ هَذِهِ عَبَارَةً مُفِيدَةً تَامَّةَ الْمَعْنَى؟",
+                text: "إِذَا نَزَلَ الْمَطَرُ مِنَ السَّمَاءِ...",
+                options: ["جُمْلَةٌ مُفِيدَةٌ ✅", "غَيْرُ مُفِيدَةٍ ❌"],
+                correct: 1,
+                hint: "ذَكِيٌّ جِدّاً! نَنْتَظِرُ أَنْ نَعْرِفَ: مَاذَا سَيَحْدُثُ إِذَا نَزَلَ الْمَطَرُ؟"
+            },
+            {
+                stage: "المَرْحَلَةُ 1: فَحْصُ الجُمَلِ السَّلِيمَةِ",
+                prompt: "هَلْ تُعَدُّ هَذِهِ عَبَارَةً مُفِيدَةً تَامَّةَ الْمَعْنَى؟",
+                text: "الشَّمْسُ سَاطِعَةٌ",
+                options: ["جُمْلَةٌ مُفِيدَةٌ ✅", "غَيْرُ مُفِيدَةٍ ❌"],
+                correct: 0,
+                hint: "مُمْتَازٌ! جُمْلَةٌ تَامَّةٌ فَهِمْنَا مِنْهَا مَعْنًى كَامِلاً."
+            },
+
+            // المرحلة 2: أقسام الكلمة (اسم، فعل، حرف)
+            {
+                stage: "المَرْحَلَةُ 2: فَرْزُ أَقْسَامِ الْكَلِمَةِ",
+                prompt: "حَدِّدْ نَوْعَ الْكَلِمَةِ الْمَعْرُوضَةِ:",
+                text: "مَدْرَسَةٌ",
+                options: ["اسْمٌ", "فِعْلٌ", "حَرْفٌ"],
+                correct: 0,
+                hint: "صَحِيحٌ! اسْمٌ لِأَنَّهَا تَقْبَلُ التَّنْوِينَ وَدَخَلَتْ عَلَيْهَا التَّاءُ الْمَرْبُوطَةُ."
+            },
+            {
+                stage: "المَرْحَلَةُ 2: فَرْزُ أَقْسَامِ الْكَلِمَةِ",
+                prompt: "حَدِّدْ نَوْعَ الْكَلِمَةِ الْمَعْرُوضَةِ:",
+                text: "يَرْكُضُ",
+                options: ["اسْمٌ", "فِعْلٌ", "حَرْفٌ"],
+                correct: 1,
+                hint: "أَحْسَنْتَ! فِعْلٌ لِأَنَّهُ يَدُلُّ عَلَى عَمَلٍ وَحَرَكَةٍ مُرْتَبِطَةٍ بِزَمَنٍ."
+            },
+            {
+                stage: "المَرْحَلَةُ 2: فَرْزُ أَقْسَامِ الْكَلِمَةِ",
+                prompt: "حَدِّدْ نَوْعَ الْكَلِمَةِ الْمَعْرُوضَةِ:",
+                text: "إِلَى",
+                options: ["اسْمٌ", "فِعْلٌ", "حَرْفٌ"],
+                correct: 2,
+                hint: "بَطَلٌ! حَرْفٌ لَا يَظْهَرُ مَعْنَاهُ كَامِلاً إِلَّا مَعَ غَيْرِهِ."
+            },
+            {
+                stage: "المَرْحَلَةُ 2: فَرْزُ أَقْسَامِ الْكَلِمَةِ",
+                prompt: "حَدِّدْ نَوْعَ الْكَلِمَةِ الْمَعْرُوضَةِ:",
+                text: "عُصْفُورٌ",
+                options: ["اسْمٌ", "فِعْلٌ", "حَرْفٌ"],
+                correct: 0,
+                hint: "مُمْتَازٌ! اسْمُ طَائِرٍ يَقْبَلُ (الـ) والتَّنْوِين."
+            },
+
+            // المرحلة 3: أنواع الفعل الثلاثة
+            {
+                stage: "المَرْحَلَةُ 3: آلَةُ زَمَنِ الأَفْعَالِ",
+                prompt: "مَا هُوَ زَمَنُ هَذَا الْفِعْلِ؟",
+                text: "كَتَبَ",
+                options: ["مَاضٍ (انْتَهَى)", "مُضَارِعٌ (الآن)", "أَمْرٌ (طَلَبٌ)"],
+                correct: 0,
+                hint: "عَبْقَرِيٌّ! فِعْلٌ مَاضٍ حَدَثَ فِي الزَّمَنِ الْمَاضِي وَانْتَهَى."
+            },
+            {
+                stage: "المَرْحَلَةُ 3: آلَةُ زَمَنِ الأَفْعَالِ",
+                prompt: "مَا هُوَ زَمَنُ هَذَا الْفِعْلِ؟",
+                text: "يَلْعَبُ",
+                options: ["مَاضٍ (انْتَهَى)", "مُضَارِعٌ (الآن)", "أَمْرٌ (طَلَبٌ)"],
+                correct: 1,
+                hint: "صَحِيحٌ! فِعْلٌ مُضَارِعٌ يَحْدُثُ فِي الْحَاضِرِ وَمَا زَالَ مُسْتَمِرّاً."
+            },
+            {
+                stage: "المَرْحَلَةُ 3: آلَةُ زَمَنِ الأَفْعَالِ",
+                prompt: "مَا هُوَ زَمَنُ هَذَا الْفِعْلِ؟",
+                text: "اِجْلِسْ",
+                options: ["مَاضٍ (انْتَهَى)", "مُضَارِعٌ (الآن)", "أَمْرٌ (طَلَبٌ)"],
+                correct: 2,
+                hint: "رَائِعٌ! فِعْلُ أَمْرٍ يُطْلَبُ بِهِ حُصُولُ شَيْءٍ فِي الْمُسْتَقْبَلِ."
+            },
+            {
+                stage: "المَرْحَلَةُ 3: آلَةُ زَمَنِ الأَفْعَالِ",
+                prompt: "مَا هُوَ زَمَنُ هَذَا الْفِعْلِ؟",
+                text: "تَرْسُمُ",
+                options: ["مَاضٍ (انْتَهَى)", "مُضَارِعٌ (الآن)", "أَمْرٌ (طَلَبٌ)"],
+                correct: 1,
+                hint: "بَارَكَ اللَّهُ فِيكَ! فِعْلٌ مُضَارِعٌ يَبْدَأُ بِحَرْفِ التَّاءِ."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+        let soundEnabled = true;
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(164.8, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            }
+        }
+
+        // العناصر
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const gamePlayScreen = document.getElementById('gamePlayScreen');
+        const certScreen = document.getElementById('certScreen');
+        const childNameInput = document.getElementById('childNameInput');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const questionNumDisplay = document.getElementById('questionNumDisplay');
+        const stageBanner = document.getElementById('stageBanner');
+        const cardPrompt = document.getElementById('cardPrompt');
+        const cardText = document.getElementById('cardText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const finalScore = document.getElementById('finalScore');
+        const restartBtn = document.getElementById('restartBtn');
+        const soundBtn = document.getElementById('soundBtn');
+
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
+        });
+
+        startGameBtn.addEventListener('click', () => {
+            const entered = childNameInput.value.trim();
+            childName = entered || (childGender === 'boy' ? 'الْبَطَلُ' : 'الْبَطَلَةُ');
+            welcomeScreen.style.display = 'none';
+            gamePlayScreen.style.display = 'block';
+            loadQuestion();
+        });
+
+        childNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startGameBtn.click();
+            }
+        });
+
+        function loadQuestion() {
+            isAnswered = false;
+            const currentQ = questions[currentIndex];
+            
+            questionNumDisplay.textContent = `${currentIndex + 1}/${questions.length}`;
+            stageBanner.textContent = currentQ.stage;
+            cardPrompt.textContent = currentQ.prompt;
+            cardText.textContent = currentQ.text;
+            
+            feedbackBox.textContent = "";
+            feedbackBox.className = "feedback-box";
+            nextBtn.style.display = "none";
+            optionsContainer.innerHTML = "";
+
+            currentQ.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-choice";
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const currentQ = questions[currentIndex];
+            const buttons = optionsContainer.querySelectorAll('.btn-choice');
+
+            if (selectedIndex === currentQ.correct) {
+                score++;
+                scoreDisplay.textContent = score;
+                clickedBtn.classList.add('correct');
+                feedbackBox.textContent = currentQ.hint;
+                feedbackBox.classList.add('correct');
+                playSound('correct');
+            } else {
+                clickedBtn.classList.add('wrong');
+                buttons[currentQ.correct].classList.add('correct');
+                feedbackBox.textContent = "حَاوِلْ مَرَّةً أُخْرَى! انْتَبِهْ لِلْقَاعِدَةِ الصَّحِيحَةِ.";
+                feedbackBox.classList.add('wrong');
+                playSound('wrong');
+            }
+
+            buttons.forEach(b => b.disabled = true);
+            nextBtn.style.display = "inline-block";
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showCertificate();
+            }
+        });
+
+        function showCertificate() {
+            gamePlayScreen.style.display = "none";
+            certScreen.style.display = "block";
+
+            // تخصيص نصوص الشهادة حسب الاسم والنوع
+            const certRoleTitle = document.getElementById('certRoleTitle');
+            const certLeadText = document.getElementById('certLeadText');
+            const certChildName = document.getElementById('certChildName');
+            const certBodyText = document.getElementById('certBodyText');
+
+            certChildName.textContent = childName;
+
+            if (childGender === 'girl') {
+                certRoleTitle.textContent = "شَهَادَةُ نَاظِرَةِ الْمَحَطَّةِ الْمُتَمَيِّزَةِ";
+                certLeadText.textContent = "نَشْهَدُ بِأَنَّ الْبَطَلَةَ النَّحْوِيَّةَ:";
+                certBodyText.innerHTML = "قَدْ أَجَادَتْ وَأَتْقَنَتِ التَّمْيِيزَ بَيْنَ <strong>الْجُمْلَةِ الْمُفِيدَةِ</strong>، وَأَقْسَامِ الْكَلِمَةِ (<strong>الاسْمِ وَالْفِعْلِ وَالْحَرْفِ</strong>)، وَأَنْوَاعِ الْفِعْلِ (<strong>الْمَاضِي وَالْمُضَارِعِ وَالأَمْرِ</strong>) بِجَدَارَةٍ!";
+            } else {
+                certRoleTitle.textContent = "شَهَادَةُ نَاظِرِ الْمَحَطَّةِ الْمُتَمَيِّزِ";
+                certLeadText.textContent = "نَشْهَدُ بِأَنَّ الْبَطَلَ النَّحْوِيَّ:";
+                certBodyText.innerHTML = "قَدْ أَجَادَ وَأَتْقَنَ التَّمْيِيزَ بَيْنَ <strong>الْجُمْلَةِ الْمُفِيدَةِ</strong>، وَأَقْسَامِ الْكَلِمَةِ (<strong>الاسْمِ وَالْفِعْلِ وَالْحَرْفِ</strong>)، وَأَنْوَاعِ الْفِعْلِ (<strong>الْمَاضِي وَالْمُضَارِعِ وَالأَمْرِ</strong>) بِجَدَارَةٍ!";
+            }
+
+            finalScore.textContent = score;
+            launchConfetti();
+        }
+
+        restartBtn.addEventListener('click', () => {
+            currentIndex = 0;
+            score = 0;
+            scoreDisplay.textContent = score;
+            certScreen.style.display = "none";
+            childNameInput.value = "";
+            welcomeScreen.style.display = "flex";
+        });
+
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+
+            const pieces = [];
+            const colors = ['#f59e0b', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6'];
+
+            for (let i = 0; i < 80; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * -canvas.height,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    velY: Math.random() * 3 + 2,
+                    velX: (Math.random() - 0.5) * 3,
+                    angle: Math.random() * 360
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.y += p.velY;
+                    p.x += p.velX;
+                    p.angle += 2;
+                    ctx.fillStyle = p.color;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.angle * Math.PI / 180);
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+                if (pieces.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
